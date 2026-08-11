@@ -31,6 +31,7 @@ OpenCTI MCP Server is a Model Context Protocol (MCP) server that provides seamle
   - View available labels
 - Customizable query limits
 - Full GraphQL query support
+- Optional compact GCF response encoding (`RESPONSE_FORMAT=gcf`) for fewer tokens
 
 ## Prerequisites
 - Node.js 16 or higher
@@ -72,6 +73,9 @@ Required environment variables:
 - `OPENCTI_URL`: Your OpenCTI instance URL
 - `OPENCTI_TOKEN`: Your OpenCTI API token
 
+Optional environment variables:
+- `RESPONSE_FORMAT`: Output encoding for tool results. `json` (default) returns standard JSON. `gcf` returns [Graph Compact Format](https://gcformat.com), a compact, lossless encoding that factors the repeated field names of a record array into a single header, so results use fewer tokens when they cross the LLM boundary. Falls back to JSON on any encoding error.
+
 ### MCP Settings
 Create a configuration file in your MCP settings location:
 ```json
@@ -82,7 +86,8 @@ Create a configuration file in your MCP settings location:
       "args": ["path/to/opencti-server/build/index.js"],
       "env": {
         "OPENCTI_URL": "${OPENCTI_URL}",  // Will be loaded from .env
-        "OPENCTI_TOKEN": "${OPENCTI_TOKEN}"  // Will be loaded from .env
+        "OPENCTI_TOKEN": "${OPENCTI_TOKEN}",  // Will be loaded from .env
+        "RESPONSE_FORMAT": "gcf"  // Optional: compact GCF encoding (default: json)
       }
     }
   }

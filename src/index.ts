@@ -8,6 +8,7 @@ import {
   McpError,
 } from '@modelcontextprotocol/sdk/types.js';
 import axios from 'axios';
+import { renderResult } from './gcf-format.js';
 import {
   LATEST_REPORTS_QUERY,
   SEARCH_MALWARE_QUERY,
@@ -616,7 +617,7 @@ class OpenCTIServer {
         return {
           content: [{
             type: 'text',
-            text: JSON.stringify(formattedResponse, null, 2)
+            text: renderResult(formattedResponse)
           }]
         };
       } catch (error) {

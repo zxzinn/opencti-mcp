@@ -12,16 +12,19 @@
   ],
   "scripts": {
     "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "test": "npm run build && node --test",
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "inspector": "npx @modelcontextprotocol/inspector build/index.js"
   },
   "dependencies": {
+    "@blackwell-systems/gcf": "2.5.2",
     "@modelcontextprotocol/sdk": "0.6.0",
     "axios": "^1.7.9"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
+    "gpt-tokenizer": "^2.9.0",
     "typescript": "^5.3.3"
   }
 }
