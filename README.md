@@ -74,7 +74,7 @@ Required environment variables:
 - `OPENCTI_TOKEN`: Your OpenCTI API token
 
 Optional environment variables:
-- `RESPONSE_FORMAT`: Output encoding for tool results. `json` (default) returns standard JSON. `gcf` returns [Graph Compact Format](https://gcformat.com), a compact, lossless encoding that factors the repeated field names of a record array into a single header, so results use fewer tokens when they cross the LLM boundary. Falls back to JSON on any encoding error.
+- `RESPONSE_FORMAT`: Output encoding for tool results. `json` (default) returns standard JSON. `gcf` returns [Graph Compact Format](https://gcformat.com), a compact encoding that factors the repeated field names of a record array into a single header, so results use fewer tokens when they cross the LLM boundary. GCF is used only when it is both smaller than the JSON and decodes back to it exactly; otherwise, and on any encoding error, the JSON is returned, so a result is never grown or garbled.
 
 ### MCP Settings
 Create a configuration file in your MCP settings location:

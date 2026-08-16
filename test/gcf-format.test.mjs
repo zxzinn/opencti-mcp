@@ -38,3 +38,27 @@ test('gcf format handles a single object result', () => {
   const report = { id: 'report--1', name: 'Q3 report', confidence: 80 };
   assert.deepEqual(norm(decodeGeneric(renderResult(report, 'gcf'))), report);
 });
+
+test('gcf falls back to JSON when it would not be smaller (never-grow)', () => {
+  // A one-field object: GCF's header overhead exceeds the tiny JSON, so the
+  // never-grow guard keeps the JSON rather than emit a larger wire.
+  const tiny = { n: 1 };
+  const out = renderResult(tiny, 'gcf');
+  assert.equal(out, JSON.stringify(tiny, null, 2));
+  assert.ok(!out.startsWith('GCF '), 'expected JSON fallback, not a GCF wire');
+});
+
+test('gcf verify keeps a digit-only string field as a string', () => {
+  // The id values are strings that look like numbers; the encoder must quote them
+  // so they decode back as strings. The round-trip verify would reject the wire and
+  // fall back to JSON if they decoded as numbers instead.
+  const rows = [
+    { id: '1001', label: 'alpha' },
+    { id: '1002', label: 'bravo' },
+  ];
+  const out = renderResult(rows, 'gcf');
+  assert.ok(out.startsWith('GCF '), 'expected a GCF wire for a multi-row array');
+  const decoded = norm(decodeGeneric(out));
+  assert.equal(typeof decoded[0].id, 'string');
+  assert.deepEqual(decoded, rows);
+});
